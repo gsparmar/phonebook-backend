@@ -1,5 +1,18 @@
+const { json } = require('express');
 const express = require('express');
 const app = express();
+
+// morgan
+const morgan = require('morgan');
+// create token for body params
+morgan.token('requestParams', (req) => JSON.stringify(req.body));
+
+// call morgan and token
+app.use(
+  morgan(
+    ':method :url :status :res[content-length] - :response-time ms :requestParams'
+  )
+);
 
 app.use(express.json());
 
@@ -30,9 +43,9 @@ const generateId = () => {
   return maxId + 1;
 };
 // post
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body;
-  console.log(body);
+  // console.log(body);
   const existingPerson = persons.find(
     (person) => person.name.toLowerCase() === body.name.toLowerCase()
   );
@@ -52,7 +65,7 @@ app.post('/api/persons', (request, response) => {
   }
 
   persons = persons.concat(person);
-  console.log(person);
+  //console.log(person);
   response.json(person);
 });
 
