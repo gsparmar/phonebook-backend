@@ -1,6 +1,10 @@
 const { json } = require('express');
 const express = require('express');
+const cors = require('cors');
 const app = express();
+
+//cors
+app.use(cors());
 
 // morgan
 const morgan = require('morgan');
@@ -43,7 +47,7 @@ const generateId = () => {
   return maxId + 1;
 };
 // post
-app.post('/api/persons', (request, response, next) => {
+app.post('/api/persons', (request, response) => {
   const body = request.body;
   // console.log(body);
   const existingPerson = persons.find(
@@ -104,6 +108,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
-const PORT = 3001;
-app.listen(PORT);
-console.log(`Server is running on port ${PORT}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Our app is running on port ${PORT}`);
+});
